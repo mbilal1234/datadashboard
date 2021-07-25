@@ -1,0 +1,166 @@
+{
+  "graphs": [
+    {
+      "definition": {
+        "viz": "timeseries",
+        "status": "done",
+        "requests": [
+          {
+            "q": "avg:aws.rds.replica_lag{account:nonprod,$replica_db}",
+            "aggregator": "avg",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Read Replica Lag"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:aws.rds.replication_slot_disk_usage{$source_db}",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Source DB: Replication Slot Disk Usage"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "status": "done",
+        "requests": [
+          {
+            "q": "avg:aws.rds.oldest_replication_slot_lag{account:nonprod,$replica_db}",
+            "aggregator": "avg",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Read Replica: Oldest Replication Slot Lag"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "status": "done",
+        "requests": [
+          {
+            "q": "avg:aws.rds.network_receive_throughput{$source_db}",
+            "aggregator": "avg",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          },
+          {
+            "q": "avg:aws.rds.network_transmit_throughput{$source_db}.as_count()",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Source DB: Network Transmit and Receive Throughput"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "status": "done",
+        "requests": [
+          {
+            "q": "avg:aws.rds.replication_slot_disk_usage{$replica_db}",
+            "aggregator": "avg",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Read Replica: Replication Slot Disk Usage"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:aws.rds.oldest_replication_slot_lag{$source_db}",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Source DB: Oldest Replication Slot Lag"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "status": "done",
+        "requests": [
+          {
+            "q": "avg:aws.rds.network_receive_throughput{$replica_db}.as_count()",
+            "aggregator": "avg",
+            "style": {
+              "width": "normal",
+              "palette": "dog_classic",
+              "type": "solid"
+            },
+            "type": "line",
+            "conditional_formats": []
+          },
+          {
+            "q": "avg:aws.rds.network_transmit_throughput{$replica_db}.as_count()",
+            "style": {
+              "width": "normal",
+              "palette": "purple",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ],
+        "autoscale": true
+      },
+      "title": "Read Replica: Network Receive & Transmit Throughput"
+    }
+  ]
+}
+
