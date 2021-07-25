@@ -1,0 +1,110 @@
+"""
+Module that enables user to create a Datadog Timeboard based on the JSON
+template input
+"""
+from __future__ import print_function
+
+import json
+import sys
+
+from argparse import ArgumentParser, FileType
+
+from datadog import initialize, api
+
+from .constants import (CLI_API_KEY_HELP, CLI_APP_KEY_HELP,
+CLI_DESC, CLI_DESCRIPTION_HELP,
+CLI_READ_ONLY_HELP, CLI_REPLICA_DB_HELP, CLI_SOURCE_DB_HELP,
+CLI_TEMPLATE_FILE_HELP, CLI_TITLE_HELP,
+DATADOG_BASE_URL,
+DEFAULT_ARG_VALUES)
+
+
+def _generate_template_vars(source_db=None, replica_db=None):
+"""
+Generate template variables required for the timeboard
+"""
+return [
+    {
+      'name': 'source_db',
+      'prefix': 'dbinstanceidentifier',  
+      'default': source_db
+      }, 
+      { 
+      'name': 'replica_db',
+      'prefix': 'dbinstanceidentifier',
+      'default': replica_db
+      } 
+   ]
+   
+   
+   def _process_optional_arg_vals(args, template):
+   """
+   Checks the values for optional args from the CLI and sets to default values
+   if needed
+   """
+   for key, val in DEFAULT_ARG_VALUES.items():
+       args_val = getattr(args, key)
+       template[key] = args_val if args_val is not None else val
+       
+       
+       def _init_dd_api(api_key, app_key):
+       """
+       Initialize Datadog API
+       """
+       initialize(api_key=api_key, app_key=app_key)
+       
+       
+       def _get_template(template_file):
+       """
+       Get template JSON from file
+       """
+       return json.load(template_file)
+       
+       
+       def main():
+       """
+       CLI main
+       """
+       try:
+           parser = ArgumentParser(description=CLI_DESC)
+           parser.add_argument('--api-key', type=str,
+                               required=True, help=CLI_API_KEY_HELP)
+           parser.add_argument('--app-key', type=str,
+                               required=True, help=CLI_APP_KEY_HELP)
+           parser.add_argument('-t', '--template-file',
+                               type=FileType('r'), default=sys.stdin,
+                               help=CLI_TEMPLATE_FILE_HELP)
+           parser.add_argument('-s', '--source-db-instance-id',
+                               type=str, default=None,
+                               help=CLI_SOURCE_DB_HELP)
+           parser.add_argument('-r', '--replica-db-instance-id',
+                               type=str, default=None,
+                               help=CLI_REPLICA_DB_HELP)
+           parser.add_argument('--title', type=str,
+                               default=None, help=CLI_TITLE_HELP)
+           parser.add_argument('--read-only', action='store_true',
+                               help=CLI_READ_ONLY_HELP)
+           parser.add_argument('--description', type=str,
+                               default=None, help=CLI_DESCRIPTION_HELP)
+                               
+                               args = parser.parse_args()
+                               
+                               _init_dd_api(args.api_key, args.app_key)
+                               
+                               template_vars = _generate_template_vars(args.source_db_instance_id,
+                                                                       args.replica_db_instance_id)
+            template = _get_template(args.template_file)
+            template['template_variables'] = template_vars
+            
+            _process_optional_arg_vals(args, template)
+            
+            resp = api.Timeboard.create(**template)
+            title = resp['dash']['title']
+            dashboard_url = '{0}{1}'.format(DATADOG_BASE_URL, resp['url'])
+            print("Successfully created dashboard with title: {}".format(
+            title))
+            print("You can view your dashboard by visiting: {}".format(
+                 dashboard_url
+                 ))
+             except Exception as err:
+                  print("Error creating dashboard {}".format(err))
