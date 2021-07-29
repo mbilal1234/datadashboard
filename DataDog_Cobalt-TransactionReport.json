@@ -1,0 +1,363 @@
+{
+  "title": "Cobalt - Transaction Report",
+  "description": "",
+  "widgets": [
+    {
+      "id": 7232492876736286,
+      "definition": {
+        "title": "Requests",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "(query1 + query2)"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:trace.servlet.request.hits{$env,$appSite,$module,$host} by {tr_deploy-site}.as_count().rollup(max, 300)",
+                "data_source": "metrics",
+                "name": "query1"
+              },
+              {
+                "query": "sum:trace.aspnet.request.hits{$env,$appSite,$module,$host} by {tr_deploy-site}.as_count().rollup(max, 300)",
+                "data_source": "metrics",
+                "name": "query2"
+              }
+            ],
+            "style": {
+              "palette": "purple",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 3
+      }
+    },
+    {
+      "id": 6854220224708734,
+      "definition": {
+        "title": "Trace Errors",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1 + query2"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:trace.servlet.request.errors{$env,$appSite,$module,$host} by {tr_deploy-site}.as_count().rollup(sum, 300)",
+                "data_source": "metrics",
+                "name": "query1"
+              },
+              {
+                "query": "sum:trace.aspnet.request.errors{$env,$appSite,$module,$host} by {tr_deploy-site}.as_count().rollup(sum, 300)",
+                "data_source": "metrics",
+                "name": "query2"
+              }
+            ],
+            "style": {
+              "palette": "warm",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 3,
+        "width": 12,
+        "height": 3
+      }
+    },
+    {
+      "id": 6988139196795634,
+      "definition": {
+        "title": "Avg Rsp Time (ms) ",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": false,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "(((query1 * query2) + (query3 * query4)) / (query4 + query2)) * 1000"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "avg:trace.servlet.request.duration{$env,$appSite,$module,$host} by {tr_deploy-site}.rollup(avg, 900)",
+                "data_source": "metrics",
+                "name": "query1"
+              },
+              {
+                "query": "sum:trace.servlet.request.hits{$env,$appSite,$module,$host} by {tr_deploy-site}.as_count().rollup(sum, 900)",
+                "data_source": "metrics",
+                "name": "query2"
+              },
+              {
+                "query": "avg:trace.aspnet.request.duration{$env,$appSite,$module,$host} by {tr_deploy-site}.rollup(avg, 900)",
+                "data_source": "metrics",
+                "name": "query3"
+              },
+              {
+                "query": "sum:trace.aspnet.request.hits{$env,$appSite,$module,$host} by {tr_deploy-site}.as_rate().rollup(sum, 900)",
+                "data_source": "metrics",
+                "name": "query4"
+              }
+            ],
+            "style": {
+              "palette": "cool",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 12,
+        "height": 3
+      }
+    },
+    {
+      "id": 4131040680397272,
+      "definition": {
+        "title": "IIS Application Stats",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "sum:trace.aspnet.request.hits{$env,$appSite,$module,$host} by {service}.as_count()",
+            "alias": "Trace Req",
+            "aggregator": "sum"
+          },
+          {
+            "q": "sum:trace.aspnet.request.errors{$env,$appSite,$module,$host} by {service}.as_count()",
+            "alias": "Trace Errors",
+            "limit": 100,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "avg:trace.aspnet.request.duration{$env,$appSite,$module,$host} by {service}",
+            "alias": "Trace Time",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "id": 772540758761590,
+      "definition": {
+        "title": "Tomcat Application Stats",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "sum:trace.servlet.request.hits{$env,$appSite,$module,$host} by {service}.as_count()",
+            "alias": "Trace Req",
+            "aggregator": "sum"
+          },
+          {
+            "q": "sum:trace.servlet.request.errors{$env,$appSite,$module,$host} by {service}.as_count()",
+            "alias": "Trace Errors",
+            "limit": 100,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "avg:trace.servlet.request.duration{$env,$appSite,$module,$host} by {service}",
+            "alias": "Trace Time",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 9,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "id": 5670893780405150,
+      "definition": {
+        "title": "IIS Application Stats By Resource (Top 10 by Errors)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "sum:trace.aspnet.request.hits{$env,$appSite,$module,$host} by {service,resource_name}.as_count()",
+            "alias": "Trace Req",
+            "aggregator": "sum"
+          },
+          {
+            "q": "sum:trace.aspnet.request.errors{$env,$appSite,$module,$host} by {service,resource_name}.as_count()",
+            "alias": "Trace Errors",
+            "limit": 10,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "avg:trace.aspnet.request.duration{$env,$appSite,$module,$host} by {service,resource_name}",
+            "alias": "Trace Time",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 13,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "id": 8647630030450802,
+      "definition": {
+        "title": "Tomcat Application Stats By Resource (Top 10 by Errors)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "sum:trace.servlet.request.hits{$env,$appSite,$module,$host} by {service,resource_name}.as_count()",
+            "alias": "Trace Req",
+            "aggregator": "sum"
+          },
+          {
+            "q": "sum:trace.servlet.request.errors{$env,$appSite,$module,$host} by {service,resource_name}.as_count()",
+            "alias": "Trace Errors",
+            "limit": 10,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "avg:trace.servlet.request.duration{$env,$appSite,$module,$host} by {service,resource_name}",
+            "alias": "Trace Time",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 13,
+        "width": 6,
+        "height": 4
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "env"
+    },
+    {
+      "name": "appSite",
+      "default": "*",
+      "prefix": "tr_deploy-site"
+    },
+    {
+      "name": "module",
+      "default": "*",
+      "prefix": "service"
+    },
+    {
+      "name": "host",
+      "default": "*",
+      "prefix": "host"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "restricted_roles": [],
+  "reflow_type": "fixed",
+  "id": "5g6-r87-knd"
+}
