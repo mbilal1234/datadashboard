@@ -1,0 +1,733 @@
+{
+  "title": "Cobalt - Coherence Report",
+  "description": "",
+  "widgets": [
+    {
+      "id": 7973082571249558,
+      "definition": {
+        "title": "Count of Bytes & Objects",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1",
+                "alias": "Objects"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": true,
+            "queries": [
+              {
+                "query": "max:jmx.coherence.cache.size{$env,$appSite,$module,$cacheName,$host}.rollup(avg, 60)",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "grey",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "bars"
+          },
+          {
+            "formulas": [
+              {
+                "formula": "query0",
+                "alias": "Bytes"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "max:jmx.coherence.cache.units{$env,$appSite,$module,$cacheName,$host}.rollup(avg, 60)",
+                "data_source": "metrics",
+                "name": "query0"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "thick"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "right_yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "id": 3963551358242864,
+      "definition": {
+        "title": "Cache Utilization % (Units vs High Units)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "(query2 / query3) * 100",
+                "alias": "Utilization %"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.units{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}.rollup(max, 60)",
+                "data_source": "metrics",
+                "name": "query2"
+              },
+              {
+                "query": "sum:jmx.coherence.cache.high_units{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}.rollup(max, 60)",
+                "data_source": "metrics",
+                "name": "query3"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "max": "100"
+        },
+        "markers": [
+          {
+            "label": " Scale Test Threshold 40% ",
+            "value": "y = 40",
+            "display_type": "error dashed"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "id": 1144769646669230,
+      "definition": {
+        "title": "Prune Events",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "diff(query1)",
+                "alias": "Prune Count"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.cache_prunes{$env,$appSite,$module,$cacheName,$host}.rollup(avg, 60)",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "orange",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 4,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 4377185514507834,
+      "definition": {
+        "title": "Coherence Hits vs Misses",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "diff(query1)",
+                "alias": "Hit"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.cache_hits{$env,$appSite,$module,$cacheName,$host}.rollup(avg, 60)",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          },
+          {
+            "formulas": [
+              {
+                "formula": "diff(query0)",
+                "alias": "Miss"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.cache_misses{$env,$appSite,$module,$cacheName,$host}.rollup(avg, 60)",
+                "data_source": "metrics",
+                "name": "query0"
+              }
+            ],
+            "style": {
+              "palette": "warm",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 4,
+        "y": 4,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 6895393654222438,
+      "definition": {
+        "title": "Gets & Puts",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "diff(query1)",
+                "alias": "Gets"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.total_gets{$env,$appSite,$module,$cacheName,$host}",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          },
+          {
+            "formulas": [
+              {
+                "formula": "diff(query0)",
+                "alias": "Puts"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.cache.total_puts{$env,$appSite,$module,$cacheName,$host}",
+                "data_source": "metrics",
+                "name": "query0"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 8,
+        "y": 4,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 7775198022395700,
+      "definition": {
+        "title": "Cache Stats (modeled after NextReport)",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "max:jmx.coherence.cache.unit_factor{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Unit Factor",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "max"
+          },
+          {
+            "q": "max:jmx.coherence.cache.high_units{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "High Units",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "max"
+          },
+          {
+            "aggregator": "max",
+            "cell_display_mode": [
+              "number"
+            ],
+            "q": "sum:jmx.coherence.cache.units{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Units/Cache Size",
+            "limit": 100,
+            "order": "desc"
+          },
+          {
+            "q": "sum:jmx.coherence.cache.size{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Max Objects",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.store_failures{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Store Failures",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.total_puts{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Put",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.total_gets{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Get",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.cache_misses{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Miss",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.cache_hits{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Hit",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.cache.cache_prunes{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Prune",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "palette": "white_on_red",
+                "value": 0
+              }
+            ],
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.storage_manager.eviction_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Eviction",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          },
+          {
+            "q": "diff(sum:jmx.coherence.storage_manager.remove_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name})",
+            "alias": "Remove",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "sum"
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "id": 1518828861556466,
+      "definition": {
+        "title": "Coherence Service Report",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "sum:jmx.coherence.service.task_backlog{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Task Backlog",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "max"
+          },
+          {
+            "q": "max:jmx.coherence.service.request_average_duration{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Req Avg Duration",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "avg"
+          },
+          {
+            "q": "clamp_min(max:jmx.coherence.service.thread_idle_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}, 0)",
+            "alias": "Thread Idle",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "max"
+          },
+          {
+            "q": "max:jmx.coherence.service.outgoing_transfer_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Outgoing Transfer",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "avg"
+          },
+          {
+            "aggregator": "max",
+            "cell_display_mode": [
+              "number"
+            ],
+            "q": "max:jmx.coherence.service.storage_enabled_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Storage Nodes Max",
+            "limit": 50,
+            "order": "desc"
+          },
+          {
+            "q": "max:jmx.coherence.service.storage_enabled_count{$env,$appSite,$module,$cacheName,$host} by {tr_cache-name}",
+            "alias": "Storage Nodes Min",
+            "cell_display_mode": [
+              "number"
+            ],
+            "aggregator": "min"
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 8,
+        "height": 5
+      }
+    },
+    {
+      "id": 8191687764287706,
+      "definition": {
+        "title": "Eviction (Orange) & Remove (Blue)",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "diff(query1)",
+                "alias": "Eviction"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.storage_manager.eviction_count{$env,$appSite,$module,$cacheName,$host}.rollup(max, 60)",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "warm",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          },
+          {
+            "formulas": [
+              {
+                "formula": "diff(query0)",
+                "alias": "Remove"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "sum:jmx.coherence.storage_manager.remove_count{$env,$appSite,$module,$cacheName,$host}.rollup(max, 60)",
+                "data_source": "metrics",
+                "name": "query0"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 8,
+        "y": 11,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "id": 7304399897621912,
+      "definition": {
+        "title": "Cluster Size",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1"
+              }
+            ],
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "query": "max:jmx.coherence.cluster.cluster_size{$env,$appSite,$module,$host} by {env,tr_deploy-site,service}",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 8,
+        "y": 13,
+        "width": 4,
+        "height": 2
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "env"
+    },
+    {
+      "name": "appSite",
+      "default": "*",
+      "prefix": "tr_deploy-site"
+    },
+    {
+      "name": "module",
+      "default": "*",
+      "prefix": "service"
+    },
+    {
+      "name": "cacheName",
+      "default": "*",
+      "prefix": "tr_cache-name"
+    },
+    {
+      "name": "host",
+      "default": "*",
+      "prefix": "host"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "restricted_roles": [],
+  "reflow_type": "fixed",
+  "id": "7fw-kze-9qr"
+}
