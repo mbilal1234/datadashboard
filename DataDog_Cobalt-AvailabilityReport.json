@@ -1,0 +1,552 @@
+{
+  "title": "Cobalt - Availability Report",
+  "description": "",
+  "widgets": [
+    {
+      "id": 5331118883649600,
+      "definition": {
+        "title": "Concurrent Sessions",
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 1536704116859672,
+            "definition": {
+              "title": "Product Views Concurrent Sessions",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "on_right_yaxis": false,
+                  "queries": [
+                    {
+                      "query": "sum:tr.cobalt.concurrent_sessions{*,*,*,$env,$appSite,$product} by {tr_product-view}.rollup(max, 60)",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 8,
+              "height": 4
+            }
+          },
+          {
+            "id": 1826295793629092,
+            "definition": {
+              "title": "Session Detail Table",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_table",
+              "requests": [
+                {
+                  "aggregator": "max",
+                  "cell_display_mode": [
+                    "bar"
+                  ],
+                  "q": "sum:tr.cobalt.concurrent_sessions{$env,$appSite,$product} by {tr_product-name,tr_product-view}.rollup(max, 300)",
+                  "alias": "Max Concurrent",
+                  "limit": 50,
+                  "order": "desc"
+                }
+              ],
+              "has_search_bar": "auto"
+            },
+            "layout": {
+              "x": 8,
+              "y": 0,
+              "width": 4,
+              "height": 6
+            }
+          },
+          {
+            "id": 1277420316689718,
+            "definition": {
+              "title": "Concurrent Sessions By Site",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "default_zero(query1)"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "on_right_yaxis": false,
+                  "queries": [
+                    {
+                      "query": "sum:tr.cobalt.concurrent_sessions{*,*,*,$env,$appSite,$product} by {tr_deploy-site}.rollup(max, 60)",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 4,
+              "width": 8,
+              "height": 2
+            }
+          },
+          {
+            "id": 1960037517653570,
+            "definition": {
+              "title": "Peak Daily Concurrent Sessions By Product",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "time": {
+                "live_span": "1mo"
+              },
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "queries": [
+                    {
+                      "query": "sum:tr.cobalt.concurrent_sessions{*,*,*,$env,$appSite,$product} by {tr_product-name}.rollup(max, 86400)",
+                      "data_source": "metrics",
+                      "name": "query1"
+                    }
+                  ],
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "line"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 6,
+              "width": 12,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 10
+      }
+    },
+    {
+      "id": 802985070838426,
+      "definition": {
+        "title": "Access Errors",
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 154574187474130,
+            "definition": {
+              "title": "Failed Logons",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "on_right_yaxis": false,
+                  "log_query": {
+                    "index": "*",
+                    "search": {
+                      "query": "$env $appSite $product.value @logrecord.key:(ADC.Workbench.Remote.Session.Signon.Failed OR Cobalt.Website.Signon.Failed OR ADC.Workbench.Web.Signon.Failed OR com.trgr.ereader.server.CreateSession.ServerError OR \"OnePassAuthenticationService – Authenticate\")"
+                    },
+                    "group_by": [
+                      {
+                        "facet": "@tr_product-name",
+                        "sort": {
+                          "order": "desc",
+                          "aggregation": "count"
+                        },
+                        "limit": 10
+                      }
+                    ],
+                    "compute": {
+                      "interval": 300000,
+                      "aggregation": "count"
+                    }
+                  },
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "min": "0"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 6715075790049464,
+            "definition": {
+              "title": "Disconnects",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "formulas": [
+                    {
+                      "formula": "query1"
+                    }
+                  ],
+                  "response_format": "timeseries",
+                  "on_right_yaxis": false,
+                  "queries": [
+                    {
+                      "search": {
+                        "query": "$env $appSite @logrecord.key:(ADC.Workbench.UDSSession.OnWrongSite OR Cobalt.Website.UDSSession.OnWrongSite) $product.value"
+                      },
+                      "data_source": "logs",
+                      "compute": {
+                        "interval": 300000,
+                        "aggregation": "count"
+                      },
+                      "name": "query1",
+                      "indexes": [
+                        "*"
+                      ],
+                      "group_by": [
+                        {
+                          "facet": "@tr_product-name",
+                          "sort": {
+                            "aggregation": "count",
+                            "order": "desc"
+                          },
+                          "limit": 10
+                        }
+                      ]
+                    }
+                  ],
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "",
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 4,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          },
+          {
+            "id": 2094774712607174,
+            "definition": {
+              "title": "Throttled",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "type": "timeseries",
+              "requests": [
+                {
+                  "on_right_yaxis": false,
+                  "log_query": {
+                    "index": "*",
+                    "search": {
+                      "query": "$env $appSite $product.value @logrecord.key:*Signon.Throttled*"
+                    },
+                    "group_by": [
+                      {
+                        "facet": "@tr_product-name",
+                        "sort": {
+                          "order": "desc",
+                          "aggregation": "count"
+                        },
+                        "limit": 50
+                      }
+                    ],
+                    "compute": {
+                      "interval": 300000,
+                      "aggregation": "count"
+                    }
+                  },
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "bars"
+                }
+              ],
+              "yaxis": {
+                "min": "0"
+              },
+              "markers": []
+            },
+            "layout": {
+              "x": 8,
+              "y": 0,
+              "width": 4,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 10,
+        "width": 12,
+        "height": 4
+      }
+    },
+    {
+      "id": 7686321438312276,
+      "definition": {
+        "title": "TODO: Uptime Results",
+        "type": "group",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 4016373846359276,
+            "definition": {
+              "type": "note",
+              "content": "TODO Section:\nIntent is to have results from uptime tests shown here as/if applicable.\n\nThis would be a time series chart showing passes and failures.",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 5,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 14,
+        "width": 12,
+        "height": 2
+      }
+    },
+    {
+      "id": 7614035860623122,
+      "definition": {
+        "title": "TODO: Events/Incidents/Watchdog",
+        "type": "group",
+        "show_title": true,
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 5081879078723326,
+            "definition": {
+              "type": "note",
+              "content": "TODO Section (maybe)\n\nThinking it may be useful to show any events/issues that Datadog is aware of for the selected timeframe in this section for reference.\n\nI am not sure how that will all look, but something to look into as more data is built out.",
+              "background_color": "white",
+              "font_size": "14",
+              "text_align": "left",
+              "vertical_align": "top",
+              "show_tick": false,
+              "tick_pos": "50%",
+              "tick_edge": "left",
+              "has_padding": true
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 7,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 16,
+        "width": 12,
+        "height": 3
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "env"
+    },
+    {
+      "name": "appSite",
+      "default": "*",
+      "prefix": "tr_deploy-site"
+    },
+    {
+      "name": "product",
+      "default": "*",
+      "prefix": "tr_product-name"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "template_variable_presets": [
+    {
+      "name": "Shared Scale (QED-US1:A)",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "qed-shared-us1"
+        },
+        {
+          "name": "appSite",
+          "value": "a"
+        }
+      ]
+    },
+    {
+      "name": "Shared-Prod-US1",
+      "template_variables": [
+        {
+          "name": "env",
+          "value": "prod-shared-us1"
+        }
+      ]
+    }
+  ],
+  "restricted_roles": [],
+  "reflow_type": "fixed",
+  "id": "374-tbk-cs7"
+}
