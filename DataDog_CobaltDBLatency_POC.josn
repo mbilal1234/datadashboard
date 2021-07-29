@@ -1,0 +1,113 @@
+{
+  "title": "CobaltDBLatency_POC",
+  "description": "",
+  "widgets": [
+    {
+      "id": 577877654514094,
+      "definition": {
+        "title": "Database Latency by Service and Site",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": [
+          "avg",
+          "min",
+          "max",
+          "value",
+          "sum"
+        ],
+        "type": "timeseries",
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "query1",
+                "alias": "db_latency_ms"
+              }
+            ],
+            "response_format": "timeseries",
+            "on_right_yaxis": false,
+            "queries": [
+              {
+                "query": "avg:oracle.tr.database.replication.latency.repl_latency_ms{$tr_service-name,$tr_database-site,$env} by {tr_database-site,tr_environment-name,tr_service-name}",
+                "data_source": "metrics",
+                "name": "query1"
+              }
+            ],
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "include_zero": true,
+          "scale": "linear",
+          "label": "",
+          "min": "auto",
+          "max": "auto"
+        },
+        "markers": []
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 4
+      }
+    },
+    {
+      "id": 4645234678779616,
+      "definition": {
+        "title": "DB Latency Table",
+        "title_size": "16",
+        "title_align": "left",
+        "type": "query_table",
+        "requests": [
+          {
+            "q": "avg:oracle.tr.database.replication.latency.repl_latency_ms{$tr_database-site,$env,$tr_service-name} by {tr_database-site, tr_environment-name, tr_service-name, tr_database-table}",
+            "aggregator": "avg",
+            "cell_display_mode": [
+              "number"
+            ],
+            "limit": 50,
+            "order": "desc"
+          }
+        ],
+        "has_search_bar": "auto"
+      },
+      "layout": {
+        "x": 0,
+        "y": 4,
+        "width": 12,
+        "height": 4
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "tr_service-name",
+      "default": "*",
+      "prefix": "tr_service-name"
+    },
+    {
+      "name": "tr_database-site",
+      "default": "a",
+      "prefix": "tr_database-site"
+    },
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "tr_environment-name"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "restricted_roles": [],
+  "reflow_type": "fixed",
+  "id": "xdc-nip-g2c"
+}
